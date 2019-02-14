@@ -1,0 +1,87 @@
+week 3 quiz code
+
+3
+SELECT saledate, SUM(sprice) as total_income
+FROM trnsact
+WHERE stype='p'
+GROUP BY saledate
+ORDER BY total_income DESC;
+
+
+4
+SELECT s.dept, COUNT(s.sku) as total_sku, d.deptdesc
+FROM skuinfo s, deptinfo d
+WHERE s.dept = d.dept
+GROUP BY s.dept, d.deptdesc
+ORDER BY total_sku DESC;
+
+7
+SELECT t.register, SUM((t.sprice-s.cost)*t.quantity)/COUNT(DISTINCT t.saledate) as profit
+FROM trnsact t LEFT JOIN skstinfo s
+ON t.sku = s.sku AND t.store=s.store
+WHERE s.cost IS NOT NULL AND t.stype='p'
+GROUP BY t.register
+ORDER BY profit DESC,t.register DESC; 
+
+
+SELECT t.register, SUM((t.sprice-s.cost)*t.quantity)/COUNT(DISTINCT t.saledate) as profit
+FROM trnsact t LEFT JOIN skstinfo s
+ON t.sku = s.sku AND t.store=s.store
+WHERE s.cost IS NOT NULL AND t.stype='p'
+GROUP BY t.register
+ORDER BY profit DESC,t.register DESC;
+
+8
+SELECT COUNT(msa) as num_msa, MAX(msa_income) as max_income, MIN(msa_pop) as min_p
+FROM store_msa
+WHERE state='NC';
+
+9
+SELECT s.style, s.brand, s.color, d.dept, d.deptdesc, SUM(t.amt)
+FROM skuinfo s, deptinfo d, trnsact t
+WHERE s.dept=d.dept
+AND t.sku=s.sku
+GROUP BY s.style, s.brand, s.color, d.dept, d.deptdesc
+ORDER BY SUM(t.amt) DESC;
+￼
+
+10
+SELECT sks.store, COUNT(DISTINCT s.sku) as num_skus
+FROM skuinfo s RIGHT JOIN skstinfo sks
+ON sks.sku=s.sku
+GROUP BY sks.store
+HAVING num_skus > 180000;
+
+11
+SELECT s.style, s.size, s.vendor, s.packsize, d.deptdesc
+FROM skuinfo s LEFT JOIN deptinfo d
+ON s.dept=d.dept
+WHERE d.deptdesc='cop'
+AND s.brand='federal'
+AND s.color='rinse wash'
+GROUP BY d.deptdesc,s.style,s.size, s.vendor, s.packsize;
+
+13
+SELECT s.state, s.city, s.store, SUM(t.amt)
+FROM trnsact t, strinfo s
+WHERE t.store=s.store
+GROUP BY s.store, s.state, s.city
+ORDER BY SUM(t.amt) desc;
+
+
+
+15
+SELECT state, COUNT(store)
+FROM strinfo
+GROUP BY state
+HAVING COUNT(store)>10;
+
+
+16
+SELECT sks.retail
+FROM skstinfo sks, skuinfo s, deptinfo d 
+WHERE sks.sku = s.sku 
+AND s.dept = d.dept
+AND d.deptdesc='reebok'
+AND s.brand='skechers'
+and s.color='wht/saphire' 
